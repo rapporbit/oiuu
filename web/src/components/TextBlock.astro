@@ -1,0 +1,180 @@
+---
+interface Props {
+  title?: string
+  type?: 'info' | 'warning' | 'success' | 'error' | 'note'
+  icon?: string
+}
+
+const { title, type = 'info', icon } = Astro.props
+
+const typeConfig = {
+  info: {
+    icon: '💡',
+    color: 'blue',
+    bgColor: 'bg-blue-50 dark:bg-blue-950/20',
+    borderColor: 'border-blue-200 dark:border-blue-800',
+    textColor: 'text-blue-800 dark:text-blue-200'
+  },
+  warning: {
+    icon: '⚠️',
+    color: 'yellow',
+    bgColor: 'bg-yellow-50 dark:bg-yellow-950/20',
+    borderColor: 'border-yellow-200 dark:border-yellow-800',
+    textColor: 'text-yellow-800 dark:text-yellow-200'
+  },
+  success: {
+    icon: '✅',
+    color: 'green',
+    bgColor: 'bg-green-50 dark:bg-green-950/20',
+    borderColor: 'border-green-200 dark:border-green-800',
+    textColor: 'text-green-800 dark:text-green-200'
+  },
+  error: {
+    icon: '❌',
+    color: 'red',
+    bgColor: 'bg-red-50 dark:bg-red-950/20',
+    borderColor: 'border-red-200 dark:border-red-800',
+    textColor: 'text-red-800 dark:text-red-200'
+  },
+  note: {
+    icon: '📝',
+    color: 'gray',
+    bgColor: 'bg-gray-50 dark:bg-gray-950/20',
+    borderColor: 'border-gray-200 dark:border-gray-800',
+    textColor: 'text-gray-800 dark:text-gray-200'
+  }
+}
+
+const config = typeConfig[type]
+---
+
+<div class={`text-block-wrapper ${config.bgColor} ${config.borderColor} border-l-4`}>
+  <div class="text-block-header">
+    <div class="text-block-icon">
+      {icon || config.icon}
+    </div>
+    {title && (
+      <h4 class={`text-block-title ${config.textColor}`}>
+        {title}
+      </h4>
+    )}
+  </div>
+  <div class="text-block-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .text-block-wrapper {
+    @apply relative my-6 rounded-lg p-4 shadow-sm;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(8px);
+  }
+
+  .text-block-wrapper:hover {
+    transform: translateY(-1px);
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .text-block-header {
+    @apply flex items-center gap-3 mb-3;
+  }
+
+  .text-block-icon {
+    @apply text-lg flex-shrink-0;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  }
+
+  .text-block-title {
+    @apply text-sm font-semibold m-0;
+  }
+
+  .text-block-content {
+    @apply text-sm leading-relaxed;
+  }
+
+  .text-block-content p {
+    @apply mb-2 last:mb-0;
+  }
+
+  .text-block-content ul,
+  .text-block-content ol {
+    @apply mb-2 pl-4;
+  }
+
+  .text-block-content li {
+    @apply mb-1;
+  }
+
+  .text-block-content code {
+    @apply bg-white/50 dark:bg-black/20 px-1 py-0.5 rounded text-xs font-mono;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  /* 动画效果 */
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .text-block-wrapper {
+    animation: slideInLeft 0.3s ease-out;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .text-block-wrapper {
+      @apply mx-2 p-3;
+    }
+    
+    .text-block-header {
+      @apply gap-2 mb-2;
+    }
+    
+    .text-block-icon {
+      @apply text-base;
+    }
+    
+    .text-block-title {
+      @apply text-xs;
+    }
+    
+    .text-block-content {
+      @apply text-xs;
+    }
+  }
+
+  /* 主题特定样式 */
+  .light .text-block-wrapper {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .text-block-wrapper {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 特殊效果 */
+  .text-block-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .dark .text-block-wrapper::before {
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.02) 100%);
+  }
+</style> 

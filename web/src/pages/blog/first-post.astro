@@ -1,0 +1,97 @@
+---
+import Layout from "@/layouts/Layout.astro"
+import { ArrowLeft } from "lucide-react"
+import { config } from "@/lib/config"
+---
+
+<Layout title="我的第一篇博客">
+  <div class="max-w-4xl mx-auto">
+    <!-- 返回按钮 -->
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+    >
+      <ArrowLeft size={16} />
+      返回首页
+    </a>
+
+    <!-- 文章头部 -->
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold mb-4">我的第一篇博客</h1>
+      <div class="flex items-center gap-4 text-sm text-muted-foreground">
+        <span>2024-01-15</span>
+        <span>•</span>
+        <span>技术</span>
+        <span>•</span>
+        <span>分享</span>
+      </div>
+    </header>
+
+    <!-- 文章内容 -->
+    <article class="prose prose-gray dark:prose-invert max-w-none">
+      <p class="text-lg text-muted-foreground mb-6">
+        这是第一篇博客的简短描述，介绍文章的主要内容...
+      </p>
+
+      <h2>引言</h2>
+      <p>
+        欢迎来到我的博客！这是我写的第一篇文章，我想在这里分享一些关于技术学习的心得体会。
+      </p>
+
+      <h2>主要内容</h2>
+      <p>
+        在这篇文章中，我将分享：
+      </p>
+      <ul>
+        <li>学习新技术的经验</li>
+        <li>项目开发中的思考</li>
+        <li>技术选型的考虑</li>
+      </ul>
+
+      <h2>技术栈</h2>
+      <p>
+        我目前主要使用的技术栈包括：
+      </p>
+      <div class="grid grid-cols-2 gap-4 my-6">
+        <div>
+          <h3 class="text-lg font-semibold mb-2">后端</h3>
+          <ul class="space-y-1">
+            {config.about.backend.map((tech) => (
+              <li class="text-sm text-muted-foreground">• {tech}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-2">前端</h3>
+          <ul class="space-y-1">
+            {config.about.frontend.map((tech) => (
+              <li class="text-sm text-muted-foreground">• {tech}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <h2>总结</h2>
+      <p>
+        通过这篇文章，我希望能够记录下学习过程中的思考和收获，也希望能够与大家分享一些有用的经验。
+      </p>
+
+      <blockquote class="border-l-4 border-primary pl-4 italic text-muted-foreground">
+        "学习是一个持续的过程，每一次的尝试都是成长的机会。"
+      </blockquote>
+    </article>
+
+    <!-- 文章底部 -->
+    <footer class="mt-12 pt-8 border-t border-border">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-muted-foreground">
+          最后更新：2024-01-15
+        </div>
+        <div class="flex gap-2">
+          <span class="px-2 py-1 bg-secondary text-xs rounded">技术</span>
+          <span class="px-2 py-1 bg-secondary text-xs rounded">分享</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</Layout> 

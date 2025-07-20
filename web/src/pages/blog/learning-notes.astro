@@ -1,0 +1,113 @@
+---
+import Layout from "@/layouts/Layout.astro"
+import { ArrowLeft } from "lucide-react"
+---
+
+<Layout title="学习心得分享">
+  <div class="max-w-4xl mx-auto">
+    <!-- 返回按钮 -->
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+    >
+      <ArrowLeft size={16} />
+      返回首页
+    </a>
+
+    <!-- 文章头部 -->
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold mb-4">学习心得分享</h1>
+      <div class="flex items-center gap-4 text-sm text-muted-foreground">
+        <span>2024-01-10</span>
+        <span>•</span>
+        <span>学习</span>
+        <span>•</span>
+        <span>心得</span>
+      </div>
+    </header>
+
+    <!-- 文章内容 -->
+    <article class="prose prose-gray dark:prose-invert max-w-none">
+      <p class="text-lg text-muted-foreground mb-6">
+        关于学习新技术的心得体会，分享一些实用的学习方法和技巧...
+      </p>
+
+      <h2>学习的重要性</h2>
+      <p>
+        在技术快速发展的今天，持续学习已经成为每个开发者的必修课。新技术层出不穷，
+        我们需要保持开放的心态，不断更新自己的知识库。
+      </p>
+
+      <h2>我的学习方法</h2>
+      <h3>1. 实践为主</h3>
+      <p>
+        理论学习固然重要，但实践才是检验真理的唯一标准。我通常会：
+      </p>
+      <ul>
+        <li>跟着官方文档动手操作</li>
+        <li>创建小项目来验证概念</li>
+        <li>在实际项目中应用新技术</li>
+      </ul>
+
+      <h3>2. 记录和总结</h3>
+      <p>
+        学习过程中及时记录心得和遇到的问题，定期总结和回顾，这样能够：
+      </p>
+      <ul>
+        <li>加深对知识的理解</li>
+        <li>避免重复犯错</li>
+        <li>形成自己的知识体系</li>
+      </ul>
+
+      <h3>3. 分享和交流</h3>
+      <p>
+        与他人分享学习心得，参与技术讨论，能够：
+      </p>
+      <ul>
+        <li>获得不同的视角</li>
+        <li>发现自己的盲点</li>
+        <li>建立技术人脉</li>
+      </ul>
+
+      <h2>推荐的学习资源</h2>
+      <div class="bg-secondary p-4 rounded-lg my-6">
+        <h3 class="font-semibold mb-2">在线学习平台</h3>
+        <ul class="space-y-1">
+          <li>• MDN Web Docs - Web 开发权威文档</li>
+          <li>• React 官方文档 - React 学习必读</li>
+          <li>• TypeScript 官方文档 - TypeScript 指南</li>
+          <li>• Astro 官方文档 - 现代静态站点生成器</li>
+        </ul>
+      </div>
+
+      <h2>学习心态</h2>
+      <p>
+        学习是一个长期的过程，不要急于求成。每个人都有自己的学习节奏，
+        重要的是保持持续学习的习惯。
+      </p>
+
+      <blockquote class="border-l-4 border-primary pl-4 italic text-muted-foreground">
+        "学习如逆水行舟，不进则退。保持好奇心，保持学习的热情。"
+      </blockquote>
+
+      <h2>总结</h2>
+      <p>
+        学习新技术需要耐心和毅力，但只要我们掌握了正确的方法，
+        就能够在这个过程中获得成长和快乐。希望我的分享能够对大家有所帮助！
+      </p>
+    </article>
+
+    <!-- 文章底部 -->
+    <footer class="mt-12 pt-8 border-t border-border">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-muted-foreground">
+          最后更新：2024-01-10
+        </div>
+        <div class="flex gap-2">
+          <span class="px-2 py-1 bg-secondary text-xs rounded">学习</span>
+          <span class="px-2 py-1 bg-secondary text-xs rounded">心得</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</Layout> 

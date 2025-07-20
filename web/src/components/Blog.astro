@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content'
+import { Calendar, Tag } from "lucide-react"
+
+// 获取所有博客文章
+const posts = await getCollection('blog')
+// 按发布日期排序，最新的在前
+const sortedPosts = posts.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+---
+
+<div class="space-y-3">
+  {
+    sortedPosts.map((post) => {
+      return (
+        <div class="group relative w-fit rounded-md px-2 pb-1 pt-2 transition-colors duration-300 hover:bg-secondary">
+          <a
+            href={`/blog/${post.slug}`}
+            class="flex w-fit items-end leading-none underline-offset-4 transition-transform group-hover:-translate-y-0.5 group-hover:underline"
+          >
+            <span class="font-medium">{post.data.title}</span>
+          </a>
+          <div class="mt-2 text-sm text-muted-foreground transition-colors group-hover:text-foreground">
+            {post.data.description}
+          </div>
+          <div class="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+            <div class="flex items-center gap-1">
+              <Calendar size={12} />
+              <span>{new Date(post.data.pubDate).toLocaleDateString('zh-CN')}</span>
+            </div>
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class="flex items-center gap-1">
+                <Tag size={12} />
+                <span>{post.data.tags.join(", ")}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )
+    })
+  }
+</div> 

@@ -1,0 +1,273 @@
+---
+import Layout from "./Layout.astro"
+import MarkdownRenderer from "../components/MarkdownRenderer.astro"
+import { ArrowLeft, Calendar, Tag } from "lucide-react"
+
+export interface Props {
+  frontmatter: {
+    title: string
+    description: string
+    pubDate: Date
+    tags?: string[]
+  }
+}
+
+const { frontmatter } = Astro.props
+const { title, description, pubDate, tags } = frontmatter
+---
+
+<Layout title={title}>
+  <div class="max-w-4xl mx-auto">
+    <!-- 返回按钮 -->
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+    >
+      <ArrowLeft size={16} />
+      返回首页
+    </a>
+
+    <!-- 文章头部 -->
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold mb-4">{title}</h1>
+      <p class="text-lg text-muted-foreground mb-4">{description}</p>
+      <div class="flex items-center gap-4 text-sm text-muted-foreground">
+        <div class="flex items-center gap-1">
+          <Calendar size={14} />
+          <span>{pubDate.toLocaleDateString('zh-CN')}</span>
+        </div>
+        {tags && tags.length > 0 && (
+          <>
+            <span>•</span>
+            <div class="flex items-center gap-1">
+              <Tag size={14} />
+              <span>{tags.join(", ")}</span>
+            </div>
+          </>
+        )}
+      </div>
+    </header>
+
+    <!-- 文章内容 -->
+    <MarkdownRenderer>
+      <slot />
+    </MarkdownRenderer>
+
+    <!-- 文章底部 -->
+    <footer class="mt-12 pt-8 border-t border-border">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-muted-foreground">
+          最后更新：{pubDate.toLocaleDateString('zh-CN')}
+        </div>
+        {tags && tags.length > 0 && (
+          <div class="flex gap-2">
+            {tags.map((tag) => (
+              <span class="px-2 py-1 bg-secondary text-xs rounded">{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    </footer>
+  </div>
+</Layout>
+
+<style>
+  /* 基础样式 */
+  .markdown-content {
+    @apply text-foreground leading-relaxed;
+  }
+
+  /* 标题样式 */
+  .markdown-content h1 {
+    @apply text-3xl font-bold mb-6 mt-8 text-foreground border-b border-border pb-2;
+  }
+
+  .markdown-content h2 {
+    @apply text-2xl font-semibold mb-4 mt-8 text-foreground;
+  }
+
+  .markdown-content h3 {
+    @apply text-xl font-medium mb-3 mt-6 text-foreground;
+  }
+
+  .markdown-content h4 {
+    @apply text-lg font-medium mb-2 mt-4 text-foreground;
+  }
+
+  .markdown-content h5 {
+    @apply text-base font-medium mb-2 mt-4 text-foreground;
+  }
+
+  .markdown-content h6 {
+    @apply text-sm font-medium mb-2 mt-4 text-muted-foreground;
+  }
+
+  /* 段落样式 */
+  .markdown-content p {
+    @apply mb-4 leading-7 text-foreground;
+  }
+
+  /* 列表样式 */
+  .markdown-content ul {
+    @apply mb-4 pl-6 space-y-1;
+  }
+
+  .markdown-content ol {
+    @apply mb-4 pl-6 space-y-1;
+  }
+
+  .markdown-content li {
+    @apply mb-1 text-foreground;
+  }
+
+  .markdown-content ul li {
+    @apply list-disc;
+  }
+
+  .markdown-content ol li {
+    @apply list-decimal;
+  }
+
+  .markdown-content ul ul,
+  .markdown-content ol ol,
+  .markdown-content ul ol,
+  .markdown-content ol ul {
+    @apply mt-2 mb-2;
+  }
+
+  /* 引用样式 */
+  .markdown-content blockquote {
+    @apply border-l-4 border-primary pl-4 italic text-muted-foreground my-6 bg-secondary/30 py-2 rounded-r;
+  }
+
+  .markdown-content blockquote p {
+    @apply mb-0;
+  }
+
+  /* 代码样式 */
+  .markdown-content code {
+    @apply bg-secondary px-1.5 py-0.5 rounded text-sm font-mono text-foreground;
+  }
+
+  .markdown-content pre {
+    @apply bg-secondary p-4 rounded-lg overflow-x-auto my-6 border border-border;
+  }
+
+  .markdown-content pre code {
+    @apply bg-transparent p-0 text-sm leading-relaxed;
+  }
+
+  /* 链接样式 */
+  .markdown-content a {
+    @apply text-primary hover:underline transition-colors;
+  }
+
+  /* 图片样式 */
+  .markdown-content img {
+    @apply rounded-lg my-6 max-w-full h-auto shadow-md;
+  }
+
+  /* 分割线样式 */
+  .markdown-content hr {
+    @apply border-border my-8;
+  }
+
+  /* 表格样式 */
+  .markdown-content table {
+    @apply w-full border-collapse border border-border my-6;
+  }
+
+  .markdown-content th {
+    @apply border border-border px-4 py-2 text-left font-semibold bg-secondary;
+  }
+
+  .markdown-content td {
+    @apply border border-border px-4 py-2;
+  }
+
+  .markdown-content tr:nth-child(even) {
+    @apply bg-secondary/30;
+  }
+
+  /* 强调样式 */
+  .markdown-content strong {
+    @apply font-semibold text-foreground;
+  }
+
+  .markdown-content em {
+    @apply italic text-foreground;
+  }
+
+  .markdown-content del {
+    @apply line-through text-muted-foreground;
+  }
+
+  /* 任务列表样式 */
+  .markdown-content input[type="checkbox"] {
+    @apply mr-2;
+  }
+
+  /* 脚注样式 */
+  .markdown-content .footnotes {
+    @apply mt-8 pt-4 border-t border-border text-sm text-muted-foreground;
+  }
+
+  .markdown-content .footnotes ol {
+    @apply pl-4;
+  }
+
+  .markdown-content .footnotes li {
+    @apply mb-1;
+  }
+
+  /* 代码块语言标识 */
+  .markdown-content pre::before {
+    content: attr(data-language);
+    @apply block text-xs text-muted-foreground mb-2 font-mono;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .markdown-content h1 {
+      @apply text-2xl;
+    }
+
+    .markdown-content h2 {
+      @apply text-xl;
+    }
+
+    .markdown-content h3 {
+      @apply text-lg;
+    }
+
+    .markdown-content pre {
+      @apply p-3 text-sm;
+    }
+
+    .markdown-content table {
+      @apply text-sm;
+    }
+
+    .markdown-content th,
+    .markdown-content td {
+      @apply px-2 py-1;
+    }
+  }
+
+  /* 暗色主题优化 */
+  .dark .markdown-content pre {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .dark .markdown-content blockquote {
+    @apply bg-gray-800/50;
+  }
+
+  .dark .markdown-content table th {
+    @apply bg-gray-800;
+  }
+
+  .dark .markdown-content table tr:nth-child(even) {
+    @apply bg-gray-800/30;
+  }
+</style> 
