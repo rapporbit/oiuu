@@ -118,14 +118,4 @@ npm run build
 # 部署 dist/ 目录到任何静态托管服务
 ```
 
-## 📄 许可证
-
-MIT License
-
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request！
-
-## 📞 联系
-
-如有问题，请查看 [CUSTOMIZATION_GUIDE.md](./CUSTOMIZATION_GUIDE.md) 或提交 Issue。 
+ 
