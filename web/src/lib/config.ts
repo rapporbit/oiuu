@@ -20,10 +20,16 @@ export const config: Config = {
     {
       name: "Jake's Blog",
       desc: "Astro Build Blog",
-      link: "https://jake.oiuu.de",
+      link: "https://github.com/rapporbit/oiuu",
       icon: "Sparkles",
     },
     // 添加更多项目...
+    {
+      name: "Jake's Blog",
+      desc: "Astro Build Blog",
+      link: "https://github.com/rapporbit/oiuu",
+      icon: "Sparkles",
+    },
   ],
   links: [
     {

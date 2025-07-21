@@ -15,23 +15,23 @@ import { ExternalLink, Minus } from "lucide-react"
   <Header />
   <main class="space-y-4">
     <Content name="Projects" index={1}>
-      {
-        config.projects.map((value) => {
-          return (
-            <div class="group relative w-fit rounded-md px-2 pb-1 pt-2 transition-colors duration-300 hover:bg-secondary">
-              <a
-                target="_blank"
-                href={value.link}
-                class="flex w-fit items-end leading-none underline-offset-4 transition-transform group-hover:-translate-y-0.5 group-hover:underline"
-              >
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {
+          config.projects.map((value) => (
+            <a
+              target="_blank"
+              href={value.link}
+              class="group relative block rounded-md p-3 transition-colors duration-300 hover:bg-secondary leading-tight focus:outline-none"
+            >
+              <div class="flex items-end underline-offset-4 transition-transform group-hover:-translate-y-0.5 group-hover:underline leading-tight">
                 <Icon name={value.icon} className="mr-1" size={16} />
-                {value.name}
+                <span class="truncate font-medium">{value.name}</span>
                 <ExternalLink
                   size={15}
-                  className="ml-10 opacity-0 transition duration-300 group-hover:block group-hover:-translate-x-8 group-hover:opacity-100"
+                  className="ml-2 opacity-0 transition duration-300 group-hover:block group-hover:-translate-x-2 group-hover:opacity-100"
                 />
-              </a>
-              <div class="mt-2 text-sm text-muted-foreground transition-colors group-hover:text-foreground">
+              </div>
+              <div class="mt-2 text-sm text-muted-foreground break-words group-hover:text-foreground leading-tight">
                 {value.desc}
               </div>
               <BorderBeam
@@ -41,35 +41,35 @@ import { ExternalLink, Minus } from "lucide-react"
                 colorTo="#facc15"
                 className="opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
-            </div>
-          )
-        })
-      }
+            </a>
+          ))
+        }
+      </div>
     </Content>
     <Content name="Blog" index={2}>
       <Blog />
     </Content>
     <Content name="Links" index={3}>
-      {
-        config.links.map((value) => {
-          return (
-            <div class="group flex w-fit items-center py-1">
-              <a
-                target={value.link.startsWith("/") ? "_self" : "_blank"}
-                href={value.link}
-                class="flex w-fit min-w-[82px] items-end leading-none underline-offset-4 transition-transform group-hover:-translate-y-0.5 group-hover:underline"
-              >
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {
+          config.links.map((value) => (
+            <a
+              target={value.link.startsWith("/") ? "_self" : "_blank"}
+              href={value.link}
+              class="group flex items-center py-2 leading-tight rounded-md transition-colors duration-300 hover:bg-secondary focus:outline-none"
+            >
+              <div class="flex min-w-[82px] items-end underline-offset-4 transition-transform group-hover:-translate-y-0.5 group-hover:underline truncate leading-tight">
                 <Icon name={value.icon} className="mr-2" size={16} />
-                {value.name}
-              </a>
+                <span class="truncate font-medium">{value.name}</span>
+              </div>
               <Minus size={20} className="mx-1" strokeWidth={1.6} />
-              <div class="text-sm text-muted-foreground transition-colors group-hover:text-foreground">
+              <div class="text-sm text-muted-foreground break-words group-hover:text-foreground leading-tight">
                 {value.desc}
               </div>
-            </div>
-          )
-        })
-      }
+            </a>
+          ))
+        }
+      </div>
     </Content>
     <Content name="About me" index={4}>
       <About />
