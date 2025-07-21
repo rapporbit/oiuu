@@ -18,21 +18,27 @@ export const config: Config = {
   github: "https://github.com/rapporbit",
   projects: [
     {
-      name: "项目名称",
-      desc: "项目描述",
-      link: "https://your-project.com",
+      name: "Jake's Blog",
+      desc: "Astro Build Blog",
+      link: "https://jake.oiuu.de",
       icon: "Sparkles",
     },
     // 添加更多项目...
   ],
   links: [
     {
-      name: "链接名称",
-      link: "https://your-link.com",
-      desc: "链接描述",
+      name: "Uptime",
+      link: "https://nezha.oiuu.de",
+      desc: "Nezha探针",
       icon: "Activity",
     },
     // 添加更多链接...
+    {
+      name: "WorkSpace",
+      link: "/workspace",
+      desc: "工欲善其事，必先利其器",
+      icon: "PocketKnife",
+    },
   ],
   about: {
     mail: "cmFwcG9yYml0MkBnbWFpbC5jb20=", // Base64 编码的邮箱

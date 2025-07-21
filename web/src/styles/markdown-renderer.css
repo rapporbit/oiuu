@@ -468,3 +468,5 @@
     color: var(--shiki-dark) !important;
   }
 } 
+
+/* 移除所有 .astro-code .line 和 .astro-code .line::before 相关行号样式 */ 
