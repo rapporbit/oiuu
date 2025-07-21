@@ -19,7 +19,7 @@ FROM alpine AS runner
 WORKDIR /app
 COPY --from=builder /app/main .
 
-ENV HOST=0.0.0.0
+ENV HOST=127.0.0.1
 ENV PORT=3000
 EXPOSE 3000
 CMD ["/app/main"]
