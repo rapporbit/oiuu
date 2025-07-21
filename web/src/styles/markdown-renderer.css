@@ -1,0 +1,459 @@
+/* === Markdown 容器基础样式 === */
+.markdown-container {
+  @apply leading-relaxed;
+  line-height: 1.7;
+  /* 移除 color: hsl(var(--foreground)); 避免覆盖代码高亮 */
+}
+
+/* === 标题样式 - 极简设计 === */
+.markdown-container h1 {
+  @apply text-3xl font-bold mb-8 mt-12 pb-3;
+  color: hsl(var(--foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  letter-spacing: -0.025em;
+}
+
+.markdown-container h2 {
+  @apply text-2xl font-semibold mb-6 mt-10;
+  color: hsl(var(--foreground));
+  letter-spacing: -0.02em;
+  position: relative;
+  padding-left: 0.75rem;
+}
+
+.markdown-container h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.125rem;
+  bottom: 0.125rem;
+  width: 3px;
+  background: hsl(var(--primary));
+  border-radius: 1.5px;
+}
+
+.markdown-container h3 {
+  @apply text-xl font-medium mb-4 mt-8;
+  color: hsl(var(--foreground));
+  letter-spacing: -0.015em;
+}
+
+.markdown-container h4 {
+  @apply text-lg font-medium mb-3 mt-6;
+  color: hsl(var(--foreground));
+}
+
+.markdown-container h5,
+.markdown-container h6 {
+  @apply text-base font-medium mb-2 mt-4;
+  color: hsl(var(--muted-foreground));
+}
+
+/* === 段落和文本样式 === */
+.markdown-container p {
+  @apply mb-5;
+  color: hsl(var(--foreground));
+  line-height: 1.75;
+}
+
+.markdown-container strong {
+  @apply font-semibold;
+  color: hsl(var(--foreground));
+}
+
+.markdown-container em {
+  @apply italic;
+  color: hsl(var(--foreground));
+}
+
+.markdown-container del {
+  @apply line-through;
+  color: hsl(var(--muted-foreground));
+}
+
+/* === 列表样式 === */
+.markdown-container ul,
+.markdown-container ol {
+  @apply mb-5 pl-6;
+}
+
+.markdown-container ul li {
+  @apply mb-1.5 relative;
+  color: hsl(var(--foreground));
+  list-style: none;
+}
+
+.markdown-container ul li::before {
+  content: '•';
+  position: absolute;
+  left: -1.25rem;
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+
+.markdown-container ol li {
+  @apply mb-1.5;
+  color: hsl(var(--foreground));
+  list-style-type: decimal;
+  list-style-position: outside;
+}
+
+.markdown-container ol {
+  counter-reset: item;
+}
+
+.markdown-container ol li {
+  list-style: none;
+  counter-increment: item;
+  position: relative;
+}
+
+.markdown-container ol li::before {
+  content: counter(item) '.';
+  position: absolute;
+  left: -1.5rem;
+  color: hsl(var(--primary));
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+/* === 引用块样式 === */
+.markdown-container blockquote {
+  @apply my-6 py-4 px-5 rounded-r-lg relative;
+  background: hsl(var(--secondary) / 0.5);
+  border-left: 4px solid hsl(var(--primary));
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+}
+
+.markdown-container blockquote p {
+  @apply mb-0;
+}
+
+/* === 链接样式 === */
+.markdown-container a {
+  color: hsl(var(--primary));
+  text-decoration: none;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.markdown-container a:hover {
+  color: hsl(var(--primary) / 0.8);
+}
+
+.markdown-container a::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: hsl(var(--primary));
+  transition: width 0.3s ease;
+}
+
+.markdown-container a:hover::after {
+  width: 100%;
+}
+
+/* === 内联代码样式 === */
+.markdown-container :not(pre) > code {
+  @apply px-1.5 py-0.5 rounded text-sm font-mono;
+  background: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  font-size: 0.875em;
+  white-space: nowrap;
+}
+
+/* === 表格样式 === */
+.markdown-container table {
+  @apply w-full my-8 rounded-lg overflow-hidden;
+  border: 1px solid hsl(var(--border));
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.markdown-container th {
+  @apply px-4 py-3 text-left font-semibold;
+  background: hsl(var(--muted) / 0.5);
+  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  font-size: 0.9em;
+  letter-spacing: 0.025em;
+}
+
+.markdown-container td {
+  @apply px-4 py-3 border-b;
+  border-color: hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+
+.markdown-container tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-container tr:hover {
+  background: hsl(var(--muted) / 0.3);
+}
+
+/* === 图片样式 === */
+.markdown-container img {
+  @apply rounded-lg my-8 max-w-full h-auto;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* === 分割线样式 === */
+.markdown-container hr {
+  @apply border-none my-12 h-px;
+  background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent);
+}
+
+/* === 任务列表样式 === */
+.markdown-container input[type="checkbox"] {
+  @apply mr-3 w-4 h-4 rounded;
+  accent-color: hsl(var(--primary));
+}
+
+.markdown-container input[type="checkbox"]:checked + span {
+  color: hsl(var(--muted-foreground));
+  text-decoration: line-through;
+}
+
+/* === Astro Shiki 代码块自定义样式 === */
+
+/* 基础代码块样式重置 */
+.markdown-container pre.astro-code {
+  @apply p-4 rounded-lg my-6 overflow-x-auto;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border));
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Consolas', monospace !important;
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+}
+
+/* === 增强代码块容器样式 === */
+.code-block-enhanced {
+  @apply my-8 rounded-xl overflow-hidden;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.code-header {
+  @apply flex items-center justify-between px-4 py-3;
+  background: hsl(var(--muted) / 0.3);
+  border-bottom: 1px solid hsl(var(--border));
+  backdrop-filter: blur(8px);
+}
+
+.language-tag {
+  @apply text-xs font-mono font-medium px-2 py-1 rounded;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  letter-spacing: 0.05em;
+}
+
+.copy-btn {
+  @apply flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200;
+  background: transparent;
+  color: hsl(var(--muted-foreground));
+  border: 1px solid transparent;
+}
+
+.copy-btn:hover {
+  background: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+  transform: translateY(-1px);
+}
+
+.copy-btn.copied {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-color: hsl(var(--primary));
+}
+
+.copy-btn:active {
+  transform: scale(0.92);
+  background: hsl(var(--secondary));
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  transition: transform 0.08s, background 0.08s;
+}
+
+.copy-icon,
+.check-icon {
+  transition: all 0.2s ease;
+}
+
+.hidden {
+  display: none;
+}
+
+/* 增强代码块内的 pre 元素 */
+.code-block-enhanced pre.astro-code {
+  @apply m-0 rounded-none border-none;
+  box-shadow: none;
+}
+
+/* 代码块复制按钮（右上角固定） */
+.code-block-enhanced {
+  position: relative;
+}
+.code-header {
+  position: relative;
+}
+.code-copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s, background 0.2s;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.code-copy-btn:hover {
+  opacity: 1;
+  background: hsl(var(--secondary));
+}
+.code-copy-btn.copied {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+/* 行内代码复制按钮（右上角固定） */
+.inline-code-enhanced {
+  position: relative;
+  display: inline-block;
+}
+.inline-copy-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  background: transparent;
+  border: none;
+  padding: 0.1rem 0.1rem 0.1rem 0.2rem;
+  cursor: pointer;
+  opacity: 0.6;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8em;
+  transition: opacity 0.2s, background 0.2s;
+}
+.inline-copy-btn:hover {
+  opacity: 1;
+  background: hsl(var(--secondary));
+}
+.inline-copy-btn.copied {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.copy-icon, .check-icon {
+  width: 1em;
+  height: 1em;
+  transition: all 0.2s;
+}
+.hidden {
+  display: none;
+}
+
+/* 保证按钮不会遮挡代码内容 */
+.code-block-enhanced pre.astro-code {
+  padding-right: 2.5rem !important;
+}
+.inline-code-enhanced code {
+  padding-right: 1.5em;
+}
+
+/* === 响应式设计 === */
+@media (max-width: 768px) {
+  .markdown-container {
+    font-size: 0.95rem;
+  }
+
+  .markdown-container h1 {
+    @apply text-2xl mb-6 mt-8;
+  }
+
+  .markdown-container h2 {
+    @apply text-xl mb-4 mt-6 pl-3;
+  }
+
+  .markdown-container h2::before {
+    width: 2px;
+  }
+
+  .markdown-container h3 {
+    @apply text-lg mb-3 mt-5;
+  }
+
+  .code-block-enhanced {
+    @apply mx-0 rounded-lg;
+  }
+
+  .code-header {
+    @apply px-3 py-2;
+  }
+
+  .language-tag {
+    @apply text-xs px-1.5;
+  }
+
+  .code-block-enhanced pre.astro-code {
+    @apply p-3 text-sm;
+  }
+
+  .markdown-container table {
+    @apply text-sm;
+  }
+
+  .markdown-container th,
+  .markdown-container td {
+    @apply px-3 py-2;
+  }
+}
+
+/* === 滚动条样式 === */
+.code-block-enhanced pre.astro-code::-webkit-scrollbar {
+  height: 6px;
+}
+
+.code-block-enhanced pre.astro-code::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-block-enhanced pre.astro-code::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+
+.code-block-enhanced pre.astro-code::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+
+/* === 动画效果 === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.code-block-enhanced {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 移除动画效果 */
+.copy-btn.copied .check-icon {
+  /* 无动画，直接显示 */
+} 

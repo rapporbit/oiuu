@@ -1,532 +1,479 @@
 ---
-import CodeBlock from './CodeBlock.astro'
+// 导入自定义样式
+import '../styles/markdown-renderer.css'
 ---
 
-<div class="markdown-enhanced">
+<div class="markdown-container">
   <slot />
 </div>
 
-<script>
-  // 处理代码块渲染
-  document.addEventListener('DOMContentLoaded', () => {
-    const codeBlocks = document.querySelectorAll('.markdown-enhanced pre code')
-    
-    codeBlocks.forEach((codeElement) => {
-      const preElement = codeElement.parentElement
-      if (!preElement) return
-      
-      // 获取语言信息
-      const language = codeElement.className.replace('language-', '') || 'text'
-      const code = codeElement.textContent || ''
-      
-      // 创建新的代码块结构
-      const wrapper = document.createElement('div')
-      wrapper.className = 'code-block-wrapper group'
-      
-      // 创建头部
-      const header = document.createElement('div')
-      header.className = 'code-block-header'
-      
-      const info = document.createElement('div')
-      info.className = 'code-block-info'
-      
-      const languageBadge = document.createElement('span')
-      languageBadge.className = 'language-badge'
-      languageBadge.textContent = language
-      
-      info.appendChild(languageBadge)
-      
-      // 创建复制按钮
-      const copyButton = document.createElement('button')
-      copyButton.className = 'copy-button'
-      copyButton.setAttribute('data-code', code)
-      copyButton.setAttribute('title', '复制代码')
-      copyButton.setAttribute('aria-label', '复制代码到剪贴板')
-      
-      copyButton.innerHTML = `
-        <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-        </svg>
-        <svg class="check-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="20,6 9,17 4,12"/>
-        </svg>
-      `
-      
-      header.appendChild(info)
-      header.appendChild(copyButton)
-      
-      // 创建代码内容
-      const codeBlock = document.createElement('pre')
-      codeBlock.className = 'code-block'
-      codeBlock.setAttribute('data-language', language)
-      
-      const codeContent = document.createElement('code')
-      codeContent.textContent = code
-      
-      codeBlock.appendChild(codeContent)
-      
-      // 组装新的结构
-      wrapper.appendChild(header)
-      wrapper.appendChild(codeBlock)
-      
-      // 替换原始元素
-      preElement.parentNode?.replaceChild(wrapper, preElement)
-    })
-    
-    // 重新绑定复制功能
-    const copyButtons = document.querySelectorAll('.copy-button')
-    copyButtons.forEach(button => {
-      button.addEventListener('click', async () => {
-        const code = button.getAttribute('data-code')
-        const copyIcon = button.querySelector('.copy-icon')
-        const checkIcon = button.querySelector('.check-icon')
-        
-        try {
-          await navigator.clipboard.writeText(code || '')
-          
-          // 显示成功状态
-          copyIcon?.classList.add('hidden')
-          checkIcon?.classList.remove('hidden')
-          button.classList.add('copied')
-          
-          // 2秒后恢复
-          setTimeout(() => {
-            copyIcon?.classList.remove('hidden')
-            checkIcon?.classList.add('hidden')
-            button.classList.remove('copied')
-          }, 2000)
-        } catch (err) {
-          console.error('复制失败:', err)
-        }
-      })
-    })
-  })
+<script is:inline>
+  // 调试输出
+  console.log('[MarkdownRenderer] 脚本已注入');
+
+  const copySvg = `
+    <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+    </svg>`;
+  // 不再插入 checkSvg
+
+  function addCopyButtonToBlock(preElement, codeElement) {
+    if (preElement.parentElement?.classList.contains('code-block-enhanced')) return;
+    const code = codeElement.textContent || '';
+    let language = preElement.getAttribute('data-language');
+    if (!language) {
+      const classNames = preElement.className || '';
+      const languageMatch = classNames.match(/language-(\w+)/);
+      language = languageMatch ? languageMatch[1] : 'text';
+    }
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block-enhanced';
+    const header = document.createElement('div');
+    header.className = 'code-header';
+    const languageTag = document.createElement('span');
+    languageTag.className = 'language-tag';
+    languageTag.textContent = language.toUpperCase();
+    const copyButton = document.createElement('button');
+    copyButton.className = 'copy-btn code-copy-btn';
+    copyButton.setAttribute('data-code', code);
+    copyButton.innerHTML = copySvg;
+    header.appendChild(languageTag);
+    header.appendChild(copyButton);
+    wrapper.appendChild(header);
+    const parent = preElement.parentNode;
+    const next = preElement.nextSibling;
+    if (parent) {
+      parent.insertBefore(wrapper, next);
+    }
+    wrapper.appendChild(preElement);
+    copyButton.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(code);
+        // 不再高亮按钮
+      } catch (err) {
+        console.error('复制失败:', err);
+      }
+    });
+  }
+
+  function addCopyButtonToInlineCode(codeElement) {
+    if (codeElement.parentElement?.classList.contains('inline-code-enhanced')) return;
+    const code = codeElement.textContent || '';
+    const wrapper = document.createElement('span');
+    wrapper.className = 'inline-code-enhanced';
+    codeElement.parentNode?.insertBefore(wrapper, codeElement);
+    wrapper.appendChild(codeElement);
+    const copyButton = document.createElement('button');
+    copyButton.className = 'copy-btn inline-copy-btn';
+    copyButton.setAttribute('data-code', code);
+    copyButton.innerHTML = copySvg;
+    wrapper.appendChild(copyButton);
+    copyButton.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      try {
+        await navigator.clipboard.writeText(code);
+        // 不再高亮按钮
+      } catch (err) {
+        console.error('复制失败:', err);
+      }
+    });
+  }
+
+  function initializeCodeBlocks() {
+    // 只处理多行代码块
+    const codeBlocks = document.querySelectorAll('.markdown-container pre.astro-code');
+    codeBlocks.forEach((preElement) => {
+      const codeElement = preElement.querySelector('code');
+      if (!codeElement) return;
+      addCopyButtonToBlock(preElement, codeElement);
+    });
+    // 不再处理行内代码
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(initializeCodeBlocks, 0));
+  } else {
+    setTimeout(initializeCodeBlocks, 0);
+  }
+  window.initializeCodeBlocks = initializeCodeBlocks;
 </script>
 
 <style>
-  /* 增强的 Markdown 样式 */
-  .markdown-enhanced {
+  /* === 基础容器样式 === */
+  .markdown-container {
     @apply text-foreground leading-relaxed;
+    color: hsl(var(--foreground));
+    line-height: 1.7;
   }
 
-  /* 标题样式增强 */
-  .markdown-enhanced h1 {
-    @apply text-3xl font-bold mb-6 mt-8 text-foreground border-b border-border pb-2;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  /* === 标题样式 - 极简设计 === */
+  .markdown-container h1 {
+    @apply text-3xl font-bold mb-8 mt-12 pb-3;
+    color: hsl(var(--foreground));
+    border-bottom: 1px solid hsl(var(--border));
+    letter-spacing: -0.025em;
   }
 
-  .markdown-enhanced h2 {
-    @apply text-2xl font-semibold mb-4 mt-8 text-foreground;
+  .markdown-container h2 {
+    @apply text-2xl font-semibold mb-6 mt-10;
+    color: hsl(var(--foreground));
+    letter-spacing: -0.02em;
     position: relative;
-    padding-left: 1rem;
+    padding-left: 0.75rem;
   }
 
-  .markdown-enhanced h2::before {
+  .markdown-container h2::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.5rem;
-    bottom: 0.5rem;
-    width: 4px;
-    background: var(--primary);
-    border-radius: 2px;
+    top: 0.125rem;
+    bottom: 0.125rem;
+    width: 3px;
+    background: hsl(var(--primary));
+    border-radius: 1.5px;
   }
 
-  .markdown-enhanced h3 {
-    @apply text-xl font-medium mb-3 mt-6 text-foreground;
+  .markdown-container h3 {
+    @apply text-xl font-medium mb-4 mt-8;
+    color: hsl(var(--foreground));
+    letter-spacing: -0.015em;
   }
 
-  .markdown-enhanced h4 {
-    @apply text-lg font-medium mb-2 mt-4 text-foreground;
+  .markdown-container h4 {
+    @apply text-lg font-medium mb-3 mt-6;
+    color: hsl(var(--foreground));
   }
 
-  /* 段落样式增强 */
-  .markdown-enhanced p {
-    @apply mb-4 leading-7 text-foreground;
+  .markdown-container h5,
+  .markdown-container h6 {
+    @apply text-base font-medium mb-2 mt-4;
+    color: hsl(var(--muted-foreground));
   }
 
-  /* 列表样式增强 */
-  .markdown-enhanced ul {
-    @apply mb-4 pl-6 space-y-1;
+  /* === 段落和文本样式 === */
+  .markdown-container p {
+    @apply mb-5;
+    color: hsl(var(--foreground));
+    line-height: 1.75;
   }
 
-  .markdown-enhanced ol {
-    @apply mb-4 pl-6 space-y-1;
+  .markdown-container strong {
+    @apply font-semibold;
+    color: hsl(var(--foreground));
   }
 
-  .markdown-enhanced li {
-    @apply mb-1 text-foreground;
+  .markdown-container em {
+    @apply italic;
+    color: hsl(var(--foreground));
   }
 
-  .markdown-enhanced ul li {
-    @apply list-disc;
+  .markdown-container del {
+    @apply line-through;
+    color: hsl(var(--muted-foreground));
   }
 
-  .markdown-enhanced ol li {
-    @apply list-decimal;
+  /* === 列表样式 === */
+  .markdown-container ul,
+  .markdown-container ol {
+    @apply mb-5 pl-6;
   }
 
-  /* 引用样式增强 */
-  .markdown-enhanced blockquote {
-    @apply border-l-4 border-primary pl-4 italic text-muted-foreground my-6 bg-secondary/30 py-2 rounded-r;
+  .markdown-container ul li {
+    @apply mb-1.5 relative;
+    color: hsl(var(--foreground));
+    list-style: none;
+  }
+
+  .markdown-container ul li::before {
+    content: '•';
+    position: absolute;
+    left: -1.25rem;
+    color: hsl(var(--primary));
+    font-weight: 600;
+  }
+
+  .markdown-container ol li {
+    @apply mb-1.5;
+    color: hsl(var(--foreground));
+    list-style-type: decimal;
+    list-style-position: outside;
+  }
+
+  .markdown-container ol {
+    counter-reset: item;
+  }
+
+  .markdown-container ol li {
+    list-style: none;
+    counter-increment: item;
     position: relative;
   }
 
-  .markdown-enhanced blockquote::before {
-    content: '"';
+  .markdown-container ol li::before {
+    content: counter(item) '.';
     position: absolute;
-    top: -0.5rem;
-    left: -1rem;
-    font-size: 3rem;
-    color: var(--primary);
-    opacity: 0.3;
+    left: -1.5rem;
+    color: hsl(var(--primary));
+    font-weight: 600;
+    font-size: 0.9em;
   }
 
-  /* 内联代码样式增强 */
-  .markdown-enhanced code:not(pre code) {
-    @apply bg-secondary px-1.5 py-0.5 rounded text-sm font-mono text-foreground;
-    border: 1px solid var(--border);
+  /* === 引用块样式 === */
+  .markdown-container blockquote {
+    @apply my-6 py-4 px-5 rounded-r-lg relative;
+    background: hsl(var(--secondary) / 0.5);
+    border-left: 4px solid hsl(var(--primary));
+    font-style: italic;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .markdown-container blockquote p {
+    @apply mb-0;
+  }
+
+  /* === 链接样式 === */
+  .markdown-container a {
+    color: hsl(var(--primary));
+    text-decoration: none;
+    position: relative;
     transition: all 0.2s ease;
   }
 
-  .markdown-enhanced code:not(pre code):hover {
-    @apply bg-secondary/80;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .markdown-container a:hover {
+    color: hsl(var(--primary) / 0.8);
   }
 
-  /* 代码块样式增强 - 使用新的 CodeBlock 组件 */
-  .markdown-enhanced pre {
-    @apply my-6;
-  }
-
-  /* 表格样式增强 */
-  .markdown-enhanced table {
-    @apply w-full border-collapse border border-border my-6 rounded-lg overflow-hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .markdown-enhanced th {
-    @apply border border-border px-4 py-2 text-left font-semibold bg-secondary;
-  }
-
-  .markdown-enhanced td {
-    @apply border border-border px-4 py-2;
-  }
-
-  .markdown-enhanced tr:nth-child(even) {
-    @apply bg-secondary/30;
-  }
-
-  .markdown-enhanced tr:hover {
-    @apply bg-secondary/50;
-  }
-
-  /* 链接样式增强 */
-  .markdown-enhanced a {
-    @apply text-primary hover:underline transition-colors;
-    position: relative;
-  }
-
-  .markdown-enhanced a::after {
+  .markdown-container a::after {
     content: '';
     position: absolute;
-    bottom: -2px;
+    bottom: -1px;
     left: 0;
     width: 0;
-    height: 2px;
-    background: var(--primary);
+    height: 1px;
+    background: hsl(var(--primary));
     transition: width 0.3s ease;
   }
 
-  .markdown-enhanced a:hover::after {
+  .markdown-container a:hover::after {
     width: 100%;
   }
 
-  /* 图片样式增强 */
-  .markdown-enhanced img {
-    @apply rounded-lg my-6 max-w-full h-auto shadow-md;
-    transition: transform 0.3s ease;
+  /* === 内联代码样式 === */
+  .markdown-container :not(pre) > code {
+    @apply px-1.5 py-0.5 rounded text-sm font-mono;
+    background: hsl(var(--secondary));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+    font-size: 0.875em;
+    white-space: nowrap;
   }
 
-  .markdown-enhanced img:hover {
-    transform: scale(1.02);
+  /* === 代码块容器样式 === */
+  .code-block-enhanced {
+    @apply my-8 rounded-xl overflow-hidden;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
-  /* 分割线样式增强 */
-  .markdown-enhanced hr {
-    @apply border-border my-8;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-    border: none;
-  }
-
-  /* 强调样式增强 */
-  .markdown-enhanced strong {
-    @apply font-semibold text-foreground;
-  }
-
-  .markdown-enhanced em {
-    @apply italic text-foreground;
-  }
-
-  .markdown-enhanced del {
-    @apply line-through text-muted-foreground;
-  }
-
-  /* 任务列表样式增强 */
-  .markdown-enhanced input[type="checkbox"] {
-    @apply mr-2;
-    transform: scale(1.2);
-  }
-
-  /* 脚注样式增强 */
-  .markdown-enhanced .footnotes {
-    @apply mt-8 pt-4 border-t border-border text-sm text-muted-foreground;
-  }
-
-  /* 响应式设计增强 */
-  @media (max-width: 768px) {
-    .markdown-enhanced h1 {
-      @apply text-2xl;
-    }
-
-    .markdown-enhanced h2 {
-      @apply text-xl;
-    }
-
-    .markdown-enhanced h3 {
-      @apply text-lg;
-    }
-
-    .markdown-enhanced pre {
-      @apply p-3 text-sm;
-    }
-
-    .markdown-enhanced table {
-      @apply text-sm;
-    }
-
-    .markdown-enhanced th,
-    .markdown-enhanced td {
-      @apply px-2 py-1;
-    }
-  }
-
-  /* 暗色主题优化 */
-  .dark .markdown-enhanced pre {
-    @apply bg-gray-800 border-gray-700;
-  }
-
-  .dark .markdown-enhanced blockquote {
-    @apply bg-gray-800/50;
-  }
-
-  .dark .markdown-enhanced table th {
-    @apply bg-gray-800;
-  }
-
-  .dark .markdown-enhanced table tr:nth-child(even) {
-    @apply bg-gray-800/30;
-  }
-
-  .dark .markdown-enhanced table tr:hover {
-    @apply bg-gray-800/50;
-  }
-
-  /* 代码块包装器样式 */
-  .code-block-wrapper {
-    @apply relative my-6 rounded-lg overflow-hidden border border-border;
-    background: linear-gradient(135deg, var(--background) 0%, var(--secondary) 100%);
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .code-block-wrapper:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 10px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
-
-  /* 代码块头部 */
-  .code-block-header {
-    @apply flex items-center justify-between px-4 py-3 bg-secondary/50 border-b border-border;
+  .code-header {
+    @apply flex items-center justify-between px-4 py-3;
+    background: hsl(var(--muted) / 0.3);
+    border-bottom: 1px solid hsl(var(--border));
     backdrop-filter: blur(8px);
   }
 
-  .code-block-info {
-    @apply flex items-center gap-3;
+  .language-tag {
+    @apply text-xs font-mono font-medium px-2 py-1 rounded;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    letter-spacing: 0.05em;
   }
 
-  .language-badge {
-    @apply px-2 py-1 text-xs font-mono font-medium rounded-md;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-    color: var(--primary-foreground);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-
-  /* 复制按钮 */
-  .copy-button {
+  .copy-btn {
     @apply flex items-center justify-center w-8 h-8 rounded-md transition-all duration-200;
-    background: var(--background);
-    border: 1px solid var(--border);
-    color: var(--muted-foreground);
+    background: transparent;
+    color: hsl(var(--muted-foreground));
+    border: 1px solid transparent;
   }
 
-  .copy-button:hover {
-    @apply scale-105;
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border-color: var(--primary);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .copy-btn:hover {
+    background: hsl(var(--secondary));
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--border));
+    transform: translateY(-1px);
   }
 
-  .copy-button:active {
-    @apply scale-95;
+  .copy-btn.copied {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary));
   }
 
-  .copy-button.copied {
-    background: var(--success);
-    color: var(--success-foreground);
-    border-color: var(--success);
-  }
-
-  .copy-icon, .check-icon {
-    @apply w-4 h-4 transition-all duration-200;
+  .copy-icon,
+  .check-icon {
+    transition: all 0.2s ease;
   }
 
   .hidden {
     display: none;
   }
 
-  /* 代码内容 */
-  .code-block {
-    @apply p-4 m-0 overflow-x-auto text-sm leading-relaxed;
-    background: var(--background);
-    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+  /* === 代码块内容样式 === */
+  .code-block-enhanced pre {
+    @apply p-4 m-0 overflow-x-auto;
+    background: hsl(var(--card));
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
   }
 
-  .code-block code {
-    @apply text-foreground;
+  .code-block-enhanced pre code {
+    @apply p-0;
     background: transparent;
     border: none;
-    padding: 0;
+    font-size: inherit;
+    white-space: pre;
   }
 
-  /* 主题适配 */
-  .light .code-block {
-    background: #f8fafc;
+  /* === 表格样式 === */
+  .markdown-container table {
+    @apply w-full my-8 rounded-lg overflow-hidden;
+    border: 1px solid hsl(var(--border));
+    border-collapse: separate;
+    border-spacing: 0;
   }
 
-  .light .code-block-wrapper {
-    border-color: #e2e8f0;
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.05),
-      0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  .markdown-container th {
+    @apply px-4 py-3 text-left font-semibold;
+    background: hsl(var(--muted) / 0.5);
+    border-bottom: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+    font-size: 0.9em;
+    letter-spacing: 0.025em;
   }
 
-  .light .code-block-header {
-    background: rgba(241, 245, 249, 0.8);
-    border-color: #e2e8f0;
+  .markdown-container td {
+    @apply px-4 py-3 border-b;
+    border-color: hsl(var(--border));
+    color: hsl(var(--foreground));
   }
 
-  .light .copy-button {
-    background: #ffffff;
-    border-color: #e2e8f0;
-    color: #64748b;
+  .markdown-container tr:last-child td {
+    border-bottom: none;
   }
 
-  .light .copy-button:hover {
-    background: #3b82f6;
-    color: #ffffff;
-    border-color: #3b82f6;
+  .markdown-container tr:hover {
+    background: hsl(var(--muted) / 0.3);
   }
 
-  .dark .code-block {
-    background: #0f172a;
+  /* === 图片样式 === */
+  .markdown-container img {
+    @apply rounded-lg my-8 max-w-full h-auto;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
-  .dark .code-block-wrapper {
-    border-color: #334155;
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.3),
-      0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  /* === 分割线样式 === */
+  .markdown-container hr {
+    @apply border-none my-12 h-px;
+    background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent);
   }
 
-  .dark .code-block-header {
-    background: rgba(30, 41, 59, 0.8);
-    border-color: #334155;
+  /* === 任务列表样式 === */
+  .markdown-container input[type="checkbox"] {
+    @apply mr-3 w-4 h-4 rounded;
+    accent-color: hsl(var(--primary));
   }
 
-  .dark .copy-button {
-    background: #1e293b;
-    border-color: #334155;
-    color: #94a3b8;
+  .markdown-container input[type="checkbox"]:checked + span {
+    color: hsl(var(--muted-foreground));
+    text-decoration: line-through;
   }
 
-  .dark .copy-button:hover {
-    background: #3b82f6;
-    color: #ffffff;
-    border-color: #3b82f6;
+  /* === 响应式设计 === */
+  @media (max-width: 768px) {
+    .markdown-container {
+      font-size: 0.95rem;
+    }
+
+    .markdown-container h1 {
+      @apply text-2xl mb-6 mt-8;
+    }
+
+    .markdown-container h2 {
+      @apply text-xl mb-4 mt-6 pl-3;
+    }
+
+    .markdown-container h2::before {
+      width: 2px;
+    }
+
+    .markdown-container h3 {
+      @apply text-lg mb-3 mt-5;
+    }
+
+    .code-block-enhanced {
+      @apply mx-0 rounded-lg;
+    }
+
+    .code-header {
+      @apply px-3 py-2;
+    }
+
+    .language-tag {
+      @apply text-xs px-1.5;
+    }
+
+    .code-block-enhanced pre {
+      @apply p-3 text-sm;
+    }
+
+    .markdown-container table {
+      @apply text-sm;
+    }
+
+    .markdown-container th,
+    .markdown-container td {
+      @apply px-3 py-2;
+    }
   }
 
-  /* 滚动条样式 */
-  .code-block::-webkit-scrollbar {
+  /* === 滚动条样式 === */
+  .code-block-enhanced pre::-webkit-scrollbar {
     height: 6px;
   }
 
-  .code-block::-webkit-scrollbar-track {
+  .code-block-enhanced pre::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  .code-block::-webkit-scrollbar-thumb {
-    @apply rounded-full;
-    background: var(--border);
+  .code-block-enhanced pre::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
   }
 
-  .code-block::-webkit-scrollbar-thumb:hover {
-    background: var(--muted-foreground);
+  .code-block-enhanced pre::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
   }
 
-  /* 动画效果 */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* === 动画效果 === */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .code-block-wrapper {
-    animation: fadeInUp 0.3s ease-out;
+  .code-block-enhanced {
+    animation: fadeIn 0.3s ease-out;
   }
 
-  @keyframes checkmark {
-    0% {
-      transform: scale(0);
-      opacity: 0;
-    }
-    50% {
-      transform: scale(1.2);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
+  @keyframes checkPop {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
   }
 
-  .copy-button.copied .check-icon {
-    animation: checkmark 0.3s ease-out;
+  .copy-btn.copied .check-icon {
+    animation: checkPop 0.3s ease-out;
   }
 </style> 
