@@ -457,3 +457,14 @@
 .copy-btn.copied .check-icon {
   /* 无动画，直接显示 */
 } 
+
+/* 让 Shiki CSS 变量高亮生效（Astro 官方推荐） */
+.astro-code span {
+  color: var(--shiki-light) !important;
+  background: none !important;
+}
+@media (prefers-color-scheme: dark) {
+  .astro-code span {
+    color: var(--shiki-dark) !important;
+  }
+} 
