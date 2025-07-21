@@ -12,7 +12,7 @@ import (
 
 const defPort = "3000"
 
-//go:embed web/dist/*
+//go:embed web/dist/**
 var webFS embed.FS
 
 func main() {
