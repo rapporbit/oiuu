@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils"
 import meta from "@/lib/meta"
 import "@fontsource-variable/roboto-mono"
 import "@/styles/globals.css"
-import ThemeIcon from "@/components/ThemeIcon.astro"
 import Footer from "@/components/Footer.astro"
+import ThemeIcon from "@/components/ThemeIcon.astro"
 
 interface Props {
   title?: string
@@ -20,6 +20,7 @@ const {
   className,
 } = Astro.props
 const spacing = 25
+const isHome = Astro.url.pathname === "/"
 ---
 
 <!doctype html>
@@ -67,9 +68,11 @@ const spacing = 25
   <body
     class={cn("font-mono mx-auto w-[90%] max-w-3xl py-5 sm:pt-10", className)}
   >
-    <div style="position:fixed;top:1.2rem;right:1.2rem;z-index:50;">
-      <ThemeIcon />
-    </div>
+    {!isHome && (
+      <div style="position:fixed;top:1.2rem;right:1.2rem;z-index:50;">
+        <ThemeIcon />
+      </div>
+    )}
     <slot />
     <Umami />
     <GridPattern
@@ -77,7 +80,7 @@ const spacing = 25
       height={spacing}
       strokeDasharray={"4 2"}
       className={cn(
-        "[mask-image:radial-gradient(circle_at_center,rgba(0,0,0,0.6),transparent)]"
+        "fixed top-0 left-0 w-full h-full -z-10 [mask-image:radial-gradient(circle_at_center,rgba(0,0,0,0.6),transparent)]"
       )}
     />
     <div class="w-full flex justify-center mt-8">
