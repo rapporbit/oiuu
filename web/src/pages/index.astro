@@ -55,7 +55,7 @@ import { ExternalLink, Minus } from "lucide-react"
             <a
               target={value.link.startsWith("/") ? "_self" : "_blank"}
               href={value.link}
-              class="group flex items-center py-2 leading-tight rounded-md transition-colors duration-300 hover:bg-secondary focus:outline-none"
+              class="group relative flex items-center py-2 leading-tight rounded-md transition-colors duration-300 hover:bg-secondary focus:outline-none"
             >
               <div class="flex min-w-[82px] items-end underline-offset-4 transition-transform group-hover:-translate-y-0.5 group-hover:underline truncate leading-tight">
                 <Icon name={value.icon} className="mr-2" size={16} />
@@ -65,6 +65,13 @@ import { ExternalLink, Minus } from "lucide-react"
               <div class="text-sm text-muted-foreground break-words group-hover:text-foreground leading-tight">
                 {value.desc}
               </div>
+              <BorderBeam
+                size={108}
+                duration={3}
+                colorFrom="#60a5fa"
+                colorTo="#facc15"
+                className="opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              />
             </a>
           ))
         }

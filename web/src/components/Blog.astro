@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content'
 import { Calendar, Tag } from "lucide-react"
+import { BorderBeam } from "@/components/magicui/border-beam"
 
 const posts = await getCollection('blog')
 const sortedPosts = posts.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
@@ -35,6 +36,13 @@ const rightColumn = latestPosts.filter((_, i) => i % 2 === 1)
             </div>
           )}
         </div>
+        <BorderBeam
+          size={108}
+          duration={3}
+          colorFrom="#60a5fa"
+          colorTo="#facc15"
+          className="opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        />
       </a>
     ))}
   </div>
@@ -62,6 +70,13 @@ const rightColumn = latestPosts.filter((_, i) => i % 2 === 1)
             </div>
           )}
         </div>
+        <BorderBeam
+          size={108}
+          duration={3}
+          colorFrom="#60a5fa"
+          colorTo="#facc15"
+          className="opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        />
       </a>
     ))}
   </div>
