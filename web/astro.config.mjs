@@ -27,8 +27,8 @@ export default defineConfig({
     syntaxHighlight: 'shiki',
     shikiConfig: {
       themes: {
-        light: 'github-light',
-        dark: 'github-dark-default',
+       light: 'min-light',
+       dark: 'monokai',
       },
       // 添加常用语言
       langs: [

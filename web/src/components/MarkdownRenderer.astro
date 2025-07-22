@@ -48,11 +48,37 @@ import '../styles/markdown-renderer.css'
     }
     wrapper.appendChild(preElement);
     copyButton.addEventListener('click', async () => {
+      let success = false;
       try {
-        await navigator.clipboard.writeText(code);
-        // 不再高亮按钮
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(code);
+          success = true;
+        } else {
+          // fallback: textarea 方案
+          const textarea = document.createElement('textarea');
+          textarea.value = code;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          try {
+            success = document.execCommand('copy');
+          } catch (err) {
+            success = false;
+          }
+          document.body.removeChild(textarea);
+        }
       } catch (err) {
-        console.error('复制失败:', err);
+        success = false;
+      }
+      if (success) {
+        copyButton.innerHTML = '✔';
+        setTimeout(() => {
+          copyButton.innerHTML = copySvg;
+        }, 1200);
+      } else {
+        alert('复制失败，请手动复制');
       }
     });
   }

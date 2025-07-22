@@ -226,7 +226,6 @@
 /* 基础代码块样式重置 */
 .markdown-container pre.astro-code {
   @apply p-4 rounded-lg my-6 overflow-x-auto;
-  background: hsl(var(--card)) !important;
   border: 1px solid hsl(var(--border));
   font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Consolas', monospace !important;
   font-size: 0.875rem !important;
@@ -236,7 +235,6 @@
 /* === 增强代码块容器样式 === */
 .code-block-enhanced {
   @apply my-8 rounded-xl overflow-hidden;
-  background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
