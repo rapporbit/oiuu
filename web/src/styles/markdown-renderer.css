@@ -457,14 +457,34 @@
 } 
 
 /* 让 Shiki CSS 变量高亮生效（Astro 官方推荐） */
+.astro-code {
+  color-scheme: light;
+}
 .astro-code span {
   color: var(--shiki-light) !important;
-  background: none !important;
+  background-color: var(--shiki-light-bg, transparent) !important;
 }
+
+/* 暗色模式下强制使用 dark 主题变量 */
 @media (prefers-color-scheme: dark) {
+  .astro-code {
+    color-scheme: dark;
+    background-color: var(--shiki-dark-bg) !important;
+  }
   .astro-code span {
     color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg, transparent) !important;
   }
+}
+
+/* 如果你用 .dark 类切换主题，也加上这个 */
+.dark .astro-code {
+  color-scheme: dark;
+  background-color: var(--shiki-dark-bg) !important;
+}
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg, transparent) !important;
 } 
 
 /* 移除所有 .astro-code .line 和 .astro-code .line::before 相关行号样式 */ 
